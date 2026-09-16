@@ -7,12 +7,13 @@ import { Services } from './components/Services';
 import { WhyUs } from './components/WhyUs';
 import { DevisSection } from './components/DevisSection';
 import { Footer } from './components/Footer';
+import { MobileCTA } from './components/MobileCTA';
 
 function App() {
   useBusinessTheme(businessConfig);
 
   return (
-    <div style={{ background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }} className="min-h-screen">
+    <div style={{ background: 'var(--color-bg)', fontFamily: 'var(--font-body)' }} className="min-h-screen pb-20 md:pb-0">
       <Header config={businessConfig} />
       <Hero config={businessConfig} />
       <TrustBar config={businessConfig} />
@@ -20,6 +21,7 @@ function App() {
       <WhyUs config={businessConfig} />
       <DevisSection config={businessConfig} />
       <Footer config={businessConfig} />
+      <MobileCTA config={businessConfig} />
     </div>
   );
 }

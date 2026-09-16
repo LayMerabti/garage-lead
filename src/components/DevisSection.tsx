@@ -66,10 +66,10 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
 
             {currentStep === 'vehicule' && (
               <StepBlock title="Votre véhicule">
-                <input className={inputClass} placeholder="Marque" value={data.marque} onChange={(e) => update('marque', e.target.value)} />
-                <input className={inputClass} placeholder="Modèle" value={data.modele} onChange={(e) => update('modele', e.target.value)} />
-                <input className={inputClass} placeholder="Année" value={data.annee} onChange={(e) => update('annee', e.target.value)} />
-                <input className={inputClass} placeholder="Plaque d'immatriculation" value={data.immatriculation} onChange={(e) => update('immatriculation', e.target.value)} />
+                <input className={inputClass} placeholder="Marque" autoComplete="off" value={data.marque} onChange={(e) => update('marque', e.target.value)} />
+                <input className={inputClass} placeholder="Modèle" autoComplete="off" value={data.modele} onChange={(e) => update('modele', e.target.value)} />
+                <input className={inputClass} placeholder="Année" inputMode="numeric" pattern="[0-9]*" maxLength={4} value={data.annee} onChange={(e) => update('annee', e.target.value)} />
+                <input className={inputClass} placeholder="Plaque d'immatriculation" autoComplete="off" autoCapitalize="characters" value={data.immatriculation} onChange={(e) => update('immatriculation', e.target.value)} />
               </StepBlock>
             )}
 
@@ -136,9 +136,9 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
 
             {currentStep === 'contact' && (
               <StepBlock title="Vos coordonnées">
-                <input className={inputClass} placeholder="Nom et prénom" value={data.nom} onChange={(e) => update('nom', e.target.value)} />
-                <input className={inputClass} placeholder="Téléphone" value={data.telephone} onChange={(e) => update('telephone', e.target.value)} />
-                <input className={inputClass} placeholder="Email (facultatif)" value={data.email} onChange={(e) => update('email', e.target.value)} />
+                <input className={inputClass} placeholder="Nom et prénom" autoComplete="name" value={data.nom} onChange={(e) => update('nom', e.target.value)} />
+                <input className={inputClass} placeholder="Téléphone" type="tel" inputMode="tel" autoComplete="tel" value={data.telephone} onChange={(e) => update('telephone', e.target.value)} />
+                <input className={inputClass} placeholder="Email (facultatif)" type="email" inputMode="email" autoComplete="email" value={data.email} onChange={(e) => update('email', e.target.value)} />
               </StepBlock>
             )}
 
