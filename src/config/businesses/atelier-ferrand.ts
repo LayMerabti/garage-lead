@@ -4,7 +4,7 @@ export const atelierFerrand: BusinessConfig = {
   id: 'atelier-ferrand',
   name: 'Atelier Ferrand',
   tagline: 'Garage automobile — Toutes marques',
-  heroTitle: 'Votre garage de confiance, sans mauvaise surprise sur la facture.',
+  heroTitle: "L'exigence du travail bien fait pour l'entretien et la réparation de votre auto.",
   heroSubtitle:
     "Entretien, révision, diagnostic électronique et pneumatiques — un travail sérieux, des devis clairs, et des délais tenus.",
   logoLabel: 'Atelier',
@@ -23,10 +23,10 @@ export const atelierFerrand: BusinessConfig = {
   },
 
   trustItems: [
-    { label: "15 ans d'expérience" },
-    { label: 'Toutes marques acceptées' },
-    { label: 'Devis gratuit sous 24h' },
-    { label: 'Véhicule de courtoisie disponible' },
+    { label: "15 ans d'expérience", icon: 'award' },
+    { label: 'Toutes marques acceptées', icon: 'car' },
+    { label: 'Devis gratuit sous 24h', icon: 'clock' },
+    { label: 'Véhicule de courtoisie disponible', icon: 'shield' },
   ],
 
   services: [
@@ -46,6 +46,7 @@ export const atelierFerrand: BusinessConfig = {
   ],
 
   address: "8 rue de l'Industrie, 69100 Villeurbanne",
+  city: 'Villeurbanne',
   phone: '04 78 XX XX XX',
   email: 'contact@atelierferrand-exemple.fr',
 
@@ -85,4 +86,8 @@ export const atelierFerrand: BusinessConfig = {
 
   webhookUrl: 'https://TON-URL-N8N/webhook/nouveau-devis',
   fallbackEmail: 'contact@atelierferrand-exemple.fr',
+  // Pas de photo pour l'instant — le Hero utilise un fond texturé de secours.
+  // Pour activer une vraie photo : déposer le fichier dans /public/images/
+  // et renseigner heroImageUrl ci-dessous, ex: '/images/atelier-hero.jpg'.
+  heroImageUrl: '/images/garage-mecanique.jpg',
 };

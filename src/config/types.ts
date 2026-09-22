@@ -15,6 +15,7 @@ export interface ThemeConfig {
 
 export interface TrustItem {
   label: string;
+  icon: 'award' | 'car' | 'clock' | 'shield';
 }
 
 export interface ServiceItem {
@@ -54,10 +55,12 @@ export interface BusinessConfig {
   services: ServiceItem[];
   stats: StatItem[];
   address: string;
+  city: string;                // ex: "Villeurbanne" — affiché dans le header pour un contact rapide
   phone: string;
   email: string;
   hours: HoursRow[];
   formOptions: FormOptions;
   webhookUrl: string;          // endpoint n8n (ou vide en attendant)
   fallbackEmail: string;       // adresse de secours si webhook échoue
+  heroImageUrl?: string;       // photo d'arrière-plan du Hero (ex: "/images/hero.jpg"). Si absent, un fond texturé de secours est utilisé.
 }

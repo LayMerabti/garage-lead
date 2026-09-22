@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { BusinessConfig } from '../config/types';
 import { useMultiStepForm } from '../hooks/useMultiStepForm';
 import { submitForm } from '../lib/submitForm';
-import { ContactInfo } from './ContactInfo';
 
 const inputClass =
   'font-[var(--font-body)] text-sm px-3.5 py-3 border rounded-sm bg-white w-full focus:outline-2 focus:outline-[var(--color-accent)]';
@@ -39,21 +38,15 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
   }
 
   return (
-    <section id="devis" className="py-24">
-      <div className="max-w-[1080px] mx-auto px-8">
-        <div className="flex justify-between items-end gap-6 mb-12 border-b-2 pb-6" style={{ borderColor: 'var(--color-ink)' }}>
-          <h2 className="text-[clamp(1.6rem,2.8vw,2.1rem)] uppercase font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
+    <section id="devis" className="py-10 md:py-24">
+      <div className="max-w-[680px] mx-auto px-8">
+        <div className="flex justify-between items-end gap-6 mb-6 md:mb-12 border-b-2 pb-3 md:pb-6" style={{ borderColor: 'var(--color-ink)' }}>
+          <h2 className="text-[clamp(1.5rem,2.8vw,2.1rem)] uppercase font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
             Demander un devis
           </h2>
-          <p className="text-gray-600 max-w-[34ch] text-sm hidden md:block">
-            Décrivez votre véhicule et le problème rencontré, on vous répond sous 24h.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-14">
-          <ContactInfo config={config} />
-
-          <div>
+        <div>
             <div className="flex gap-1.5 mb-6">
               {Array.from({ length: totalSteps }).map((_, i) => (
                 <div
@@ -173,7 +166,6 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
                 </button>
               )}
             </div>
-          </div>
         </div>
       </div>
     </section>
@@ -207,7 +199,7 @@ function ChoiceButton({ label, active, onClick }: { label: string; active: boole
 
 function ConfirmationMessage({ title, text, onReset }: { title: string; text: string; onReset: () => void }) {
   return (
-    <section className="py-24">
+    <section className="py-12 md:py-24">
       <div className="max-w-[560px] mx-auto px-8 text-center">
         <h2 className="text-xl mb-4 uppercase font-semibold" style={{ fontFamily: 'var(--font-display)' }}>{title}</h2>
         <p className="text-gray-600 text-sm mb-6">{text}</p>
