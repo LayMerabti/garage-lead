@@ -1,15 +1,25 @@
 import type { BusinessConfig, TrustItem } from '../config/types';
 
+// Carte flottante qui chevauche légèrement le bas du Hero (margin négative),
+// plutôt qu'une bande plate classique — reprend l'effet du mockup fourni.
 export function TrustBar({ config }: { config: BusinessConfig }) {
   return (
-    <div className="py-3 md:py-5 text-white" style={{ background: 'var(--color-steel)' }}>
-      <div className="max-w-[1080px] mx-auto px-8 flex flex-col md:flex-row justify-between flex-wrap gap-2.5 md:gap-4">
-        {config.trustItems.map((item) => (
-          <div key={item.label} className="flex items-center gap-2.5 text-sm uppercase tracking-wide">
-            <TrustIcon name={item.icon} />
-            {item.label}
-          </div>
-        ))}
+    <div className="relative z-10 px-4 md:px-8 -mt-6 md:-mt-8">
+      <div
+        className="max-w-[1080px] mx-auto rounded-2xl shadow-xl overflow-hidden divide-y md:divide-y-0 md:divide-x divide-white/10"
+        style={{ background: 'rgba(43,58,69,0.96)' }}
+      >
+        <div className="flex flex-col md:flex-row">
+          {config.trustItems.map((item) => (
+            <div
+              key={item.label}
+              className="flex-1 flex items-center gap-2.5 text-white text-sm px-4 py-3 md:py-4 md:justify-center border-b md:border-b-0 last:border-b-0 border-white/10"
+            >
+              <TrustIcon name={item.icon} />
+              <span className="uppercase tracking-wide">{item.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -17,14 +27,15 @@ export function TrustBar({ config }: { config: BusinessConfig }) {
 
 function TrustIcon({ name }: { name: TrustItem['icon'] }) {
   const common = {
-    width: 16,
-    height: 16,
+    width: 17,
+    height: 17,
     viewBox: '0 0 24 24',
     fill: 'none',
     stroke: 'var(--color-accent)',
-    strokeWidth: 2.2,
+    strokeWidth: 2.1,
     strokeLinecap: 'round' as const,
     strokeLinejoin: 'round' as const,
+    className: 'shrink-0',
   };
 
   switch (name) {

@@ -30,12 +30,12 @@ export const atelierFerrand: BusinessConfig = {
   ],
 
   services: [
-    { title: 'Vidange & entretien', description: 'Vidange complète, filtres, niveaux, contrôle des points de sécurité', price: 'À partir de 79€' },
-    { title: 'Révision constructeur', description: "Suivi du carnet d'entretien, respect des préconisations", price: 'À partir de 149€' },
-    { title: 'Diagnostic électronique', description: 'Lecture des voyants moteur, détection de panne valise', price: 'À partir de 45€' },
-    { title: 'Pneumatiques', description: 'Montage, équilibrage, parallélisme, toutes marques', price: 'Sur devis' },
-    { title: 'Freinage', description: 'Plaquettes, disques, contrôle du circuit hydraulique', price: 'À partir de 99€' },
-    { title: 'Préparation contrôle technique', description: 'Contrôle des points de vigilance avant passage au CT', price: 'À partir de 39€' },
+    { title: 'Vidange & entretien', description: 'Vidange complète, filtres, niveaux, contrôle des points de sécurité', price: 'À partir de 79€', icon: 'oil' },
+    { title: 'Révision constructeur', description: "Suivi du carnet d'entretien, respect des préconisations", price: 'À partir de 149€', icon: 'book' },
+    { title: 'Diagnostic électronique', description: 'Lecture des voyants moteur, détection de panne valise', price: 'À partir de 45€', icon: 'diagnostic' },
+    { title: 'Pneumatiques', description: 'Montage, équilibrage, parallélisme, toutes marques', price: 'Sur devis', icon: 'tire' },
+    { title: 'Freinage', description: 'Plaquettes, disques, contrôle du circuit hydraulique', price: 'À partir de 99€', icon: 'brake' },
+    { title: 'Préparation contrôle technique', description: 'Contrôle des points de vigilance avant passage au CT', price: 'À partir de 39€', icon: 'check' },
   ],
 
   stats: [

@@ -22,6 +22,7 @@ export interface ServiceItem {
   title: string;
   description: string;
   price: string; // ex: "À partir de 79€" ou "Sur devis"
+  icon: 'oil' | 'book' | 'diagnostic' | 'tire' | 'brake' | 'check';
 }
 
 export interface StatItem {

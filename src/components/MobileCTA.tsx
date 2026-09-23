@@ -7,24 +7,24 @@ import type { BusinessConfig } from '../config/types';
 export function MobileCTA({ config }: { config: BusinessConfig }) {
   return (
     <div
-      className="md:hidden fixed bottom-3 left-3 right-3 z-40 flex overflow-hidden rounded-2xl shadow-lg backdrop-blur-md"
+      className="md:hidden fixed bottom-3 left-3 right-3 z-40 flex overflow-hidden rounded-[28px] shadow-2xl"
       style={{
         marginBottom: 'env(safe-area-inset-bottom)',
-        border: '1px solid rgba(255,255,255,0.15)',
+        border: '1px solid rgba(255,255,255,0.12)',
       }}
     >
       <a
         href={`tel:${config.phone.replace(/\s/g, '')}`}
-        className="flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold uppercase tracking-wide text-white"
-        style={{ background: 'rgba(43,58,69,0.88)' }}
+        className="flex-1 flex items-center justify-center gap-2 py-4 text-sm font-semibold uppercase tracking-wide text-white"
+        style={{ background: 'color-mix(in srgb, var(--color-steel) 92%, black)' }}
       >
         <PhoneIcon />
         Appeler
       </a>
       <a
         href="#devis"
-        className="flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold uppercase tracking-wide text-white"
-        style={{ background: 'rgba(226,103,42,0.92)' }}
+        className="flex-1 flex items-center justify-center gap-2 py-4 text-sm font-semibold uppercase tracking-wide text-white"
+        style={{ background: 'color-mix(in srgb, var(--color-accent) 85%, black)' }}
       >
         <QuoteIcon />
         Devis
