@@ -1,40 +1,53 @@
 import { useState } from 'react';
 
-export type Step = 'vehicule' | 'prestation' | 'probleme' | 'urgence' | 'photos' | 'contact';
+export type Step = 'vehicule' | 'prestation' | 'contact';
+export type ContactPreference = 'sms' | 'appel' | 'email';
 
-const STEPS: Step[] = ['vehicule', 'prestation', 'probleme', 'urgence', 'photos', 'contact'];
+const STEPS: Step[] = ['vehicule', 'prestation', 'contact'];
+export const STEP_LABELS: Record<Step, string> = {
+  vehicule: 'Véhicule',
+  prestation: 'Prestation',
+  contact: 'Coordonnées',
+};
 
 export interface FormData {
+  // Étape véhicule — mode plaque (collecte simple, pas d'auto-remplissage
+  // réel : nécessiterait une API SIV/Cartegrise payante non branchée) ou
+  // mode manuel.
+  plaque: string;
+  vehiculeManuel: boolean;
   marque: string;
   modele: string;
   annee: string;
-  immatriculation: string;
+  // Étape prestation
   prestation: string;
-  probleme: string;
   message: string;
-  urgence: string;
   photos: File[];
+  // Étape contact
+  prenom: string;
   nom: string;
   telephone: string;
   email: string;
+  contactPreference: ContactPreference;
 }
 
 const initialData: FormData = {
+  plaque: '',
+  vehiculeManuel: false,
   marque: '',
   modele: '',
   annee: '',
-  immatriculation: '',
   prestation: '',
-  probleme: '',
   message: '',
-  urgence: '',
   photos: [],
+  prenom: '',
   nom: '',
   telephone: '',
   email: '',
+  contactPreference: 'appel',
 };
 
-// State machine du parcours de demande de devis. Chaque étape ne dépend
+// State machine du tunnel de devis (3 étapes). Chaque étape ne dépend
 // d'aucune donnée métier — les libellés viennent de la config business.
 export function useMultiStepForm() {
   const [stepIndex, setStepIndex] = useState(0);

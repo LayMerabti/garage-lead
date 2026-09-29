@@ -57,30 +57,13 @@ export const atelierFerrand: BusinessConfig = {
   ],
 
   formOptions: {
-    vehiculeFields: ['Marque', 'Modèle', 'Année', 'Immatriculation'],
     prestations: [
-      'Vidange / entretien',
-      'Révision constructeur',
-      'Diagnostic électronique',
-      'Pneumatiques',
-      'Freinage',
-      'Contrôle technique',
-      'Autre',
-    ],
-    problemes: [
-      'Voyant allumé',
-      'Bruit',
-      'Vibration',
-      'Démarrage difficile',
-      'Perte de puissance',
-      'Problème de freinage',
-      'Fuite',
-      'Autre',
-    ],
-    urgences: [
-      { value: 'simple', label: 'Simple demande', color: '#4a7fb5' },
-      { value: 'rapide', label: 'À traiter rapidement', color: '#e2672a' },
-      { value: 'immobilise', label: 'Véhicule immobilisé', color: '#c0392b' },
+      { label: 'Entretien / Vidange', icon: 'oil', priceHint: 'À partir de 79€' },
+      { label: 'Révision constructeur', icon: 'book', priceHint: 'À partir de 149€' },
+      { label: 'Diagnostic / Voyant', icon: 'diagnostic', priceHint: 'À partir de 45€' },
+      { label: 'Freinage / Amortisseurs', icon: 'brake', priceHint: 'À partir de 99€' },
+      { label: 'Pneumatiques', icon: 'tire', priceHint: 'Sur devis' },
+      { label: 'Autre demande', icon: 'check' },
     ],
   },
 
@@ -90,4 +73,7 @@ export const atelierFerrand: BusinessConfig = {
   // Pour activer une vraie photo : déposer le fichier dans /public/images/
   // et renseigner heroImageUrl ci-dessous, ex: '/images/atelier-hero.jpg'.
   heroImageUrl: '/images/garage-mecanique.jpg',
+  // PLACEHOLDER DE DÉMO — chiffres fictifs. À remplacer par la vraie note
+  // Google du garage avant toute mise en ligne ou démo client.
+  googleRating: { value: '4.8', count: 200 },
 };
