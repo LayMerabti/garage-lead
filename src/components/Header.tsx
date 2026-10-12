@@ -1,5 +1,11 @@
 import type { BusinessConfig } from '../config/types';
 
+// Breakpoints volontairement espacés : entre 768px (mobile→tablette) et
+// 1024px, il n'y a pas assez de largeur pour nav + ville + téléphone +
+// bouton en même temps (c'est ce qui causait le débordement horizontal
+// sur iPad). Les liens de nav et la ville n'apparaissent donc qu'à partir
+// de lg (1024px) ; seuls logo + téléphone + CTA restent visibles en
+// dessous, ce qui tient toujours dans la largeur disponible.
 export function Header({ config }: { config: BusinessConfig }) {
   const telHref = `tel:${config.phone.replace(/\s/g, '')}`;
 
@@ -17,28 +23,26 @@ export function Header({ config }: { config: BusinessConfig }) {
           <span style={{ color: 'var(--color-accent)' }}>{config.logoAccent}</span>
         </div>
 
-        <div className="hidden md:flex gap-8 text-sm uppercase tracking-wide text-gray-300">
+        <div className="hidden lg:flex gap-8 text-sm uppercase tracking-wide text-gray-300">
           <a href="#services" className="border-b-2 border-transparent hover:border-[var(--color-accent)] hover:text-white transition-colors pb-0.5">Prestations</a>
           <a href="#pourquoi" className="border-b-2 border-transparent hover:border-[var(--color-accent)] hover:text-white transition-colors pb-0.5">Pourquoi nous</a>
           <a href="#devis" className="border-b-2 border-transparent hover:border-[var(--color-accent)] hover:text-white transition-colors pb-0.5">Devis</a>
         </div>
 
-        <div className="flex items-center gap-3 md:gap-5">
-          {/* Bloc contact rapide : visible dès le header, à toute taille d'écran.
-              Sur mobile, seul le logo du garage apparait */}
-          <a href={telHref} className="hidden md:flex items-center gap-1.5 text-gray-300 text-sm whitespace-nowrap">
-             <PinIcon />
-            {config.city}
-          </a>
-          <span className="hidden md:flex items-center gap-1.5 text-gray-300 text-sm whitespace-nowrap">
-           <PhoneIcon />
+        <div className="flex items-center gap-3 md:gap-5 shrink-0">
+          <a href={telHref} className="flex items-center gap-1.5 text-white text-xs md:text-sm whitespace-nowrap">
+            <PhoneIcon />
             <span>{config.phone}</span>
+          </a>
+          <span className="hidden lg:flex items-center gap-1.5 text-gray-300 text-sm whitespace-nowrap">
+            <PinIcon />
+            {config.city}
           </span>
 
           {/* Masqué sur mobile : redondant avec la barre CTA sticky en bas d'écran (MobileCTA) */}
           <a
             href="#devis"
-            className="hidden md:inline-block text-white text-sm font-semibold uppercase tracking-wide px-5 py-2.5"
+            className="hidden md:inline-block text-white text-sm font-semibold uppercase tracking-wide px-4 lg:px-5 py-2.5 whitespace-nowrap"
             style={{ background: 'var(--color-accent)' }}
           >
             Devis gratuit
