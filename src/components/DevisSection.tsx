@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { BusinessConfig } from '../config/types';
-import { useMultiStepForm, STEP_LABELS, type ContactPreference } from '../hooks/useMultiStepForm';
+import { useMultiStepForm, STEP_LABELS, isValidPlate, type ContactPreference } from '../hooks/useMultiStepForm';
 import { submitForm } from '../lib/submitForm';
+import { lookupPlate } from '../lib/lookupPlate';
 import { ServiceIcon } from './icons/ServiceIcon';
 
 const inputClass =
@@ -10,12 +11,57 @@ const inputClass =
 const primaryBtnClass =
   'w-full text-center font-bold uppercase tracking-wide text-white rounded-xl px-6 py-4 shadow-lg transition-transform hover:-translate-y-0.5';
 
+// Même style que inputClass, avec bordure rouge quand le champ est en erreur.
+const inputCls = (hasError: boolean) =>
+  hasError ? inputClass.replace('border-slate-300', 'border-red-500') : inputClass;
+
 export function DevisSection({ config }: { config: BusinessConfig }) {
-  const { currentStep, stepIndex, totalSteps, isFirst, isLast, data, update, next, back, reset } =
-    useMultiStepForm();
+  const {
+    currentStep, stepIndex, totalSteps, isFirst, isLast, data, errors, canProceed,
+    update, setPlaque, setVehicleMode, applyLookup, validate, next, back, reset,
+  } = useMultiStepForm();
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'fallback'>('idle');
+  const [lookupStatus, setLookupStatus] = useState<'idle' | 'loading' | 'found'>('idle');
+  const [lookupNotice, setLookupNotice] = useState<string | null>(null);
+
+  // Recherche automatique du véhicule dès que la plaque est complète et valide.
+  // En cas d'échec (plaque inconnue, n8n éteint...), on bascule en saisie
+  // manuelle : l'utilisateur n'est jamais bloqué.
+  const plateLookupUrl = config.plateLookupUrl;
+  useEffect(() => {
+    if (data.vehiculeManuel || !isValidPlate(data.plaque)) {
+      setLookupStatus('idle');
+      return;
+    }
+    if (!plateLookupUrl) {
+      setLookupNotice('Renseignez votre véhicule ci-dessous.');
+      setVehicleMode(true);
+      return;
+    }
+
+    let cancelled = false; // ignore la réponse si la plaque a changé entre-temps
+    setLookupStatus('loading');
+    lookupPlate(plateLookupUrl, data.plaque).then((result) => {
+      if (cancelled) return;
+      if (result.status === 'found') {
+        applyLookup(result.vehicle);
+        setLookupStatus('found');
+        setLookupNotice(null);
+      } else {
+        setLookupStatus('idle');
+        setLookupNotice(
+          result.status === 'error'
+            ? "La recherche automatique est indisponible. Renseignez votre véhicule ci-dessous."
+            : "Nous n'avons pas retrouvé ce véhicule. Renseignez-le ci-dessous."
+        );
+        setVehicleMode(true);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [data.plaque, data.vehiculeManuel, plateLookupUrl, applyLookup, setVehicleMode]);
 
   async function handleSubmit() {
+    if (!validate()) return;
     setStatus('sending');
     const result = await submitForm(config, data);
     setStatus(result.status === 'success' ? 'success' : 'fallback');
@@ -41,9 +87,7 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
     );
   }
 
-  const vehicleRecap = data.vehiculeManuel
-    ? [data.marque, data.modele].filter(Boolean).join(' ') || null
-    : data.plaque || null;
+  const vehicleRecap = [data.marque, data.modele].filter(Boolean).join(' ') || data.plaque || null;
 
   return (
     <section id="devis" className="py-10 md:py-24">
@@ -94,21 +138,37 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
             {!data.vehiculeManuel ? (
               <div className="mb-4">
                 <label className="block text-sm font-semibold uppercase tracking-wide mb-2">Plaque d'immatriculation</label>
-                <div className="flex border-2 border-[var(--color-ink)] rounded-xl overflow-hidden shadow-sm">
+                <div className={`flex border-2 ${errors.plaque ? 'border-red-500' : 'border-[var(--color-ink)]'} rounded-xl overflow-hidden shadow-sm`}>
                   <div className="w-3 bg-[#1a3a8f] shrink-0" />
                   <input
                     className="flex-1 px-4 py-4 text-2xl tracking-[0.15em] font-bold uppercase text-center focus:outline-none"
                     placeholder="AB-123-CD"
                     style={{ fontFamily: 'var(--font-display)' }}
                     value={data.plaque}
-                    onChange={(e) => update('plaque', e.target.value.toUpperCase())}
+                    onChange={(e) => setPlaque(e.target.value)}
+                    aria-invalid={!!errors.plaque}
                     maxLength={9}
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2 text-center">Remplissage automatique de la marque et du modèle</p>
+                {errors.plaque && (
+                  <p className="text-xs text-red-600 mt-2 text-center" role="alert">{errors.plaque}</p>
+                )}
+                {lookupStatus === 'loading' && (
+                  <p className="text-xs text-gray-500 mt-2 text-center">Recherche de votre véhicule...</p>
+                )}
+                {lookupStatus === 'found' && (
+                  <p className="text-sm font-medium mt-3 text-center">
+                    ✓ {data.marque} {data.modele}
+                    {data.motorisation ? ` — ${data.motorisation}` : ''}
+                    {data.annee ? ` (${data.annee})` : ''}
+                  </p>
+                )}
+                {lookupStatus === 'idle' && !errors.plaque && (
+                  <p className="text-xs text-gray-500 mt-2 text-center">Remplissage automatique de la marque et du modèle</p>
+                )}
                 <button
                   type="button"
-                  onClick={() => update('vehiculeManuel', true)}
+                  onClick={() => { setLookupNotice(null); setVehicleMode(true); }}
                   className="text-xs text-gray-500 underline block mx-auto mt-3"
                 >
                   Vous n'avez pas votre plaque ? Renseigner manuellement
@@ -117,14 +177,26 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
             ) : (
               <div>
                 <h3 className="text-lg mb-4 uppercase font-semibold" style={{ fontFamily: 'var(--font-display)' }}>Votre véhicule</h3>
+                {lookupNotice && (
+                  <p className="text-xs text-gray-600 mb-3 px-3 py-2 rounded-lg bg-[var(--color-accent-soft)]" role="status">{lookupNotice}</p>
+                )}
                 <div className="grid gap-3 mb-3">
-                  <input className={inputClass} placeholder="Marque" autoComplete="off" value={data.marque} onChange={(e) => update('marque', e.target.value)} />
-                  <input className={inputClass} placeholder="Modèle" autoComplete="off" value={data.modele} onChange={(e) => update('modele', e.target.value)} />
-                  <input className={inputClass} placeholder="Année" inputMode="numeric" pattern="[0-9]*" maxLength={4} value={data.annee} onChange={(e) => update('annee', e.target.value)} />
+                  <div>
+                    <input className={inputCls(!!errors.marque)} placeholder="Marque" autoComplete="off" value={data.marque} onChange={(e) => update('marque', e.target.value)} />
+                    <FieldError message={errors.marque} />
+                  </div>
+                  <div>
+                    <input className={inputCls(!!errors.modele)} placeholder="Modèle" autoComplete="off" value={data.modele} onChange={(e) => update('modele', e.target.value)} />
+                    <FieldError message={errors.modele} />
+                  </div>
+                  <div>
+                    <input className={inputCls(!!errors.annee)} placeholder="Année" inputMode="numeric" pattern="[0-9]*" maxLength={4} value={data.annee} onChange={(e) => update('annee', e.target.value)} />
+                    <FieldError message={errors.annee} />
+                  </div>
                 </div>
                 <button
                   type="button"
-                  onClick={() => update('vehiculeManuel', false)}
+                  onClick={() => { setLookupNotice(null); setVehicleMode(false); }}
                   className="text-xs text-gray-500 underline"
                 >
                   ↩ Utiliser ma plaque d'immatriculation à la place
@@ -158,6 +230,9 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
                 );
               })}
             </div>
+            {errors.prestation && (
+              <p className="text-xs text-red-600 -mt-2 mb-3 text-center" role="alert">{errors.prestation}</p>
+            )}
             <textarea
               className={inputClass + ' min-h-20 resize-y mb-3'}
               placeholder="Précisez si besoin — décrivez le problème (optionnel)"
@@ -190,10 +265,19 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
             )}
 
             <div className="grid gap-3 mb-4">
-              <input className={inputClass} placeholder="Prénom" autoComplete="given-name" value={data.prenom} onChange={(e) => update('prenom', e.target.value)} />
+              <div>
+                <input className={inputCls(!!errors.prenom)} placeholder="Prénom" autoComplete="given-name" value={data.prenom} onChange={(e) => update('prenom', e.target.value)} />
+                <FieldError message={errors.prenom} />
+              </div>
               <input className={inputClass} placeholder="Nom (optionnel)" autoComplete="family-name" value={data.nom} onChange={(e) => update('nom', e.target.value)} />
-              <input className={inputClass} placeholder="Téléphone" type="tel" inputMode="tel" autoComplete="tel" value={data.telephone} onChange={(e) => update('telephone', e.target.value)} />
-              <input className={inputClass} placeholder="Email" type="email" inputMode="email" autoComplete="email" value={data.email} onChange={(e) => update('email', e.target.value)} />
+              <div>
+                <input className={inputCls(!!errors.telephone)} placeholder="Téléphone" type="tel" inputMode="tel" autoComplete="tel" value={data.telephone} onChange={(e) => update('telephone', e.target.value)} />
+                <FieldError message={errors.telephone} />
+              </div>
+              <div>
+                <input className={inputCls(!!errors.email)} placeholder="Email" type="email" inputMode="email" autoComplete="email" value={data.email} onChange={(e) => update('email', e.target.value)} />
+                <FieldError message={errors.email} />
+              </div>
             </div>
 
             <div className="mb-5">
@@ -225,7 +309,7 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
               onClick={handleSubmit}
               disabled={status === 'sending'}
               className={primaryBtnClass}
-              style={{ background: 'var(--color-accent)' }}
+              style={{ background: 'var(--color-accent)', opacity: canProceed ? 1 : 0.6 }}
             >
               {status === 'sending' ? 'Envoi...' : 'Recevoir mon devis gratuit (sous 24h)'}
             </button>
@@ -234,7 +318,7 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
               type="button"
               onClick={next}
               className={primaryBtnClass}
-              style={{ background: 'var(--color-accent)' }}
+              style={{ background: 'var(--color-accent)', opacity: canProceed ? 1 : 0.6 }}
             >
               {currentStep === 'vehicule' ? 'Voir mon devis gratuit →' : 'Continuer vers mes coordonnées →'}
             </button>
@@ -255,6 +339,11 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
       </div>
     </section>
   );
+}
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return <p className="text-xs text-red-600 mt-1.5" role="alert">{message}</p>;
 }
 
 function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {

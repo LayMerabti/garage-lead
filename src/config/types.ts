@@ -65,6 +65,7 @@ export interface BusinessConfig {
   hours: HoursRow[];
   formOptions: FormOptions;
   webhookUrl: string;          // endpoint n8n (ou vide en attendant)
+  plateLookupUrl?: string;     // endpoint n8n de recherche de plaque (optionnel)
   fallbackEmail: string;       // adresse de secours si webhook échoue
   heroImageUrl?: string;       // photo d'arrière-plan du Hero (ex: "/images/hero.jpg"). Si absent, un fond texturé de secours est utilisé.
   // Note avis Google — PLACEHOLDER DE DÉMO. Remplacer par la vraie note et

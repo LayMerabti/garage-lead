@@ -67,7 +67,8 @@ export const atelierFerrand: BusinessConfig = {
     ],
   },
 
-  webhookUrl: 'https://TON-URL-N8N/webhook/nouveau-devis',
+  webhookUrl: 'http://localhost:5678/webhook-test/nouveau-devis',
+  plateLookupUrl: 'http://localhost:5678/webhook/plaque',
   fallbackEmail: 'contact@atelierferrand-exemple.fr',
   // Pas de photo pour l'instant — le Hero utilise un fond texturé de secours.
   // Pour activer une vraie photo : déposer le fichier dans /public/images/
