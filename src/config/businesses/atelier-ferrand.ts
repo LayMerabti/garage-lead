@@ -47,7 +47,7 @@ export const atelierFerrand: BusinessConfig = {
 
   address: "8 rue de l'Industrie, 69100 Villeurbanne",
   city: 'Villeurbanne',
-  phone: '04 78 XX XX XX',
+  phone: '04 65 71 12 34',
   email: 'contact@atelierferrand-exemple.fr',
 
   hours: [
@@ -67,7 +67,7 @@ export const atelierFerrand: BusinessConfig = {
     ],
   },
 
-  webhookUrl: 'http://localhost:5678/webhook-test/nouveau-devis',
+  webhookUrl: 'http://localhost:5678/webhook/nouveau-devis',
   plateLookupUrl: 'http://localhost:5678/webhook/plaque',
   fallbackEmail: 'contact@atelierferrand-exemple.fr',
   // Pas de photo pour l'instant — le Hero utilise un fond texturé de secours.
@@ -76,5 +76,5 @@ export const atelierFerrand: BusinessConfig = {
   heroImageUrl: '/images/garage-mecanique.jpg',
   // PLACEHOLDER DE DÉMO — chiffres fictifs. À remplacer par la vraie note
   // Google du garage avant toute mise en ligne ou démo client.
-  googleRating: { value: '4.8', count: 200 },
+  /* googleRating: { value: '4.8', count: 200 }, */
 };

@@ -80,8 +80,9 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
   if (status === 'fallback') {
     return (
       <ConfirmationMessage
-        title="Votre demande n'a pas pu être envoyée automatiquement"
-        text={`Merci de nous contacter directement : ${config.phone} ou ${config.fallbackEmail}. Vos informations n'ont pas été perdues, mais notre système préfère vous le confirmer plutôt que de risquer une demande silencieusement égarée.`}
+        title="L'envoi n'a pas fonctionné"
+        text={`Votre demande n'a pas pu être transmise. Vous pouvez réessayer (les informations saisies sont conservées) ou contacter directement le garage au ${config.phone} ou par email à ${config.fallbackEmail}.`}
+        onRetry={() => setStatus('idle')}
         onReset={() => { reset(); setStatus('idle'); }}
       />
     );
@@ -326,7 +327,7 @@ export function DevisSection({ config }: { config: BusinessConfig }) {
 
           {isLast && (
             <p className="text-xs text-gray-500 text-center flex items-center justify-center gap-1.5">
-              <LockIcon /> Vos données restent 100% confidentielles. Aucun spam.
+              <LockIcon /> Vos informations servent uniquement à établir votre devis.
             </p>
           )}
 
@@ -355,12 +356,22 @@ function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
   );
 }
 
-function ConfirmationMessage({ title, text, onReset }: { title: string; text: string; onReset: () => void }) {
+function ConfirmationMessage({ title, text, onReset, onRetry }: { title: string; text: string; onReset: () => void; onRetry?: () => void }) {
   return (
     <section className="py-24">
       <div className="max-w-[560px] mx-auto px-8 text-center">
         <h2 className="text-xl mb-4 uppercase font-semibold" style={{ fontFamily: 'var(--font-display)' }}>{title}</h2>
         <p className="text-gray-600 text-sm mb-6">{text}</p>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="block w-full max-w-xs mx-auto mb-4 text-center font-bold uppercase tracking-wide text-white rounded-xl px-6 py-3 shadow-lg"
+            style={{ background: 'var(--color-accent)' }}
+          >
+            Réessayer l'envoi
+          </button>
+        )}
         <button onClick={onReset} className="text-sm uppercase tracking-wide underline">
           Faire une nouvelle demande
         </button>
